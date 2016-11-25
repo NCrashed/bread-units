@@ -1,0 +1,31 @@
+{
+	"folders":
+	[
+		{
+			"path": "."
+		}
+	],
+  "build_systems":
+  [
+    {
+      "name": "Stack backend",
+      "shell_cmd": "stack install",
+      "working_dir": "${project_path}/bread-units-backend"
+    },
+    {
+      "name": "Stack backend pedantic",
+      "shell_cmd": "stack install --pedantic",
+      "working_dir": "${project_path}/bread-units-backend"
+    },
+    {
+      "name": "Stack frontend",
+      "shell_cmd": "./build.sh",
+      "working_dir": "${project_path}/bread-units-frontend"
+    },
+    {
+      "name": "Stack frontend pedantic",
+      "shell_cmd": "./build.sh --pedantic",
+      "working_dir": "${project_path}/bread-units-frontend"
+    }
+  ],
+}
