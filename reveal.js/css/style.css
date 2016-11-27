@@ -1,0 +1,6 @@
+.center-wrap { text-align: center; }
+.center { display: inline-block; }
+.code { font-size: 46px !important; }
+.hljs { min-height: 50px; vertical-align: middle;}
+.hljs span { line-height: 50px; }
+.plot { width: 1920px; height: 800px;  }

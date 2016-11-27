@@ -4,10 +4,11 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+		<title>reflex-dom</title>
 
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+		<link rel="stylesheet" href="css/style.css">
+		<link rel="stylesheet" href="css/theme/white.css">
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -20,22 +21,114 @@
 			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
 			document.getElementsByTagName( 'head' )[0].appendChild( link );
 		</script>
+
 	</head>
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>reflex-dom</section>
-				<section>Slide 2</section>
+				<section>
+					<h1>reflex-dom</h1>
+					Reactive Haskell frontend
+				</section>
+				<section>На кого расчитан доклад?</section>
+				<section>План доклада</section>
+				<section>Что такое FRP?
+					<section>
+						<p>Программа как асинхронный data flow</p>
+						<object type="image/svg+xml" data="img/frp_01.svg"></object>
+					</section>
+					<section>
+						<p>Акцент на распространение обновлений</p>
+						<object type="image/svg+xml" data="img/frp_02.svg"></object>
+					</section>
+					<section>
+						<p>Композиция и модульность</p>
+						<object type="image/svg+xml" data="img/frp_03.svg"></object>
+					</section>
+				</section> 
+				<section>Зачем нужно FRP?
+					<ul>
+						<li>Замена callbacks на composable компоненты</li>
+						<li>GUI: desktop и web</li>
+						<li>Генерация музыки</li>
+						<li>Разработка игр</li>
+						<li>Поведение в робототехнике</li>
+					</ul>
+				</section> 
+				<section>
+					Модель reflex
+
+					<section>Behavior
+				    <pre><code data-trim data-noescape class="code haskell">
+							type Behavior a = Time -> a
+				    </code></pre>
+				    <ul>
+				    	<li>В любой момент времени имеет конкретное значение</li>
+				    	<li>Значение должно явно запрашиваться: 
+						    <pre><code data-trim data-noescape class="code haskell">
+									sample :: MonadSample m => Behavior a -> m a
+						    </code></pre>
+				    	</li>
+				    	<li>Нельзя получать уведомление о изменении значения</li>
+				    </ul>
+					</section>
+					<section>Behavior
+						<div class="center-wrap">
+							<div class="center plot" id="behavior-plot"></div>
+						</div>
+					</section>
+
+					<section>Event
+				    <pre><code data-trim data-noescape class="code haskell">
+							type Event a = [(Time, a)]
+				    </code></pre>
+				    <ul>
+				    	<li>Дискретный поток событий</li>
+				    	<li>Нет возможности узнать "текущее" значении
+						    <pre><code data-trim data-noescape class="code haskell">
+									hold :: MonadHold m => a -> Event a -> m (Behavior a)
+						    </code></pre>
+						  </li>
+				    </ul>
+					</section>
+					<section>Event
+						<div class="center-wrap">
+							<div class="center plot" id="event-plot"></div>
+						</div>
+					</section>
+
+					<section>Dynamic
+				    <pre><code data-trim data-noescape class="code haskell">
+							type Dynamic a = (Behavior a, Event a)
+				    </code></pre>
+					</section>
+					<section>Dynamic
+						<div class="center-wrap">
+							<div class="center plot" id="dynamic-plot"></div>
+						</div>
+					</section>
+
+					<section>Монадоидический API</section>
+					<section>Switching</section>
+				</section>
+				<section>
+					Пример
+					<section>Хлебные единицы</section>
+					<section>Server API</section>
+				</section>
 			</div>
 		</div>
 
 		<script src="lib/js/head.min.js"></script>
 		<script src="js/reveal.js"></script>
+		<script src="js/plotly.min.js"></script>
 
 		<script>
 			// More info https://github.com/hakimel/reveal.js#configuration
 			Reveal.initialize({
 				history: true,
+				width: 1920,
+    		height: 1080,
 
 				// More info https://github.com/hakimel/reveal.js#dependencies
 				dependencies: [
@@ -43,8 +136,137 @@
 					{ src: 'plugin/markdown/markdown.js' },
 					{ src: 'plugin/notes/notes.js', async: true },
 					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
-				]
+				],
+
 			});
+			//Reveal.configure({ slideNumber: 'c/t' });
+
+			function makeBehaviorPlot() {
+				var trace1 = {
+				  x: [1, 2, 3, 4],
+				  y: [10, 15, 13, 17],
+				  type: 'scatter',
+				  line: {
+				    color: 'rgb(0, 0, 0)',
+				    width: 5
+				  }
+				};
+
+				var layout = {
+				  title: '',
+				  xaxis: {
+				    title: 'Время'
+				  },
+				  yaxis: {
+				    title: 'Значение'
+				  },
+				  margin: {'b':75,'l':75, 'r':0, 't':0},
+				  legend: {
+				  	font: { size: 38 },
+				  },
+				  font: { size: 28 },
+				};
+
+				var options = {
+					displayModeBar: false,
+				};
+
+				Plotly.newPlot('behavior-plot', [trace1], layout, options);
+			}
+
+			function makeEventPlot() {
+				var trace1 = {
+				  x: [1, 1,  1,         2, 2,  2,         3, 3,  3,         4, 4,  4        ],
+				  y: [0, 10, undefined, 0, 15, undefined, 0, 13, undefined, 0, 17, undefined],
+				  type: 'scatter',
+				  line: {
+				    color: 'rgb(0, 0, 0)',
+				    width: 2
+				  },
+				  marker: { size: 12 }
+				};
+
+
+				var layout = {
+				  title: '',
+				  xaxis: {
+				    title: 'Время'
+				  },
+				  yaxis: {
+				    title: 'Значение'
+				  },
+				  margin: {'b':75,'l':75, 'r':0, 't':0},
+				  legend: {
+				  	font: { size: 38 },
+				  },
+				  font: { size: 28 },
+				};
+
+				var options = {
+					displayModeBar: false,
+				};
+
+				Plotly.newPlot('event-plot', [trace1], layout, options);
+			}
+
+
+			function makeDynamicPlot() {
+				var trace1 = {
+				  x: [1, 1,  1,         2, 2,  2,         3, 3,  3,         4, 4,  4        ],
+				  y: [0, 10, undefined, 0, 15, undefined, 0, 13, undefined, 0, 17, undefined],
+				  type: 'scatter',
+				  name: "События",
+				  line: {
+				    color: 'rgb(100, 100, 100)',
+				    width: 2
+				  },
+				};
+
+				var trace2 = {
+				  x: [1, 2, 3, 4],
+				  y: [10, 15, 13, 17],
+				  type: 'scatter',
+				  name: "Значения",
+				  line: {
+				    color: 'rgb(0, 0, 0)',
+				    width: 4,
+				    shape: 'hv'
+				  },
+				  marker: { size: 12 }
+				};
+
+				var layout = {
+				  title: '',
+				  xaxis: {
+				    title: 'Время',
+				  },
+				  yaxis: {
+				    title: 'Значение'
+				  },
+				  margin: {'b':75,'l':75, 'r':0, 't':0},
+				  legend: {
+				  	font: { size: 38 },
+				  },
+				  font: { size: 28 },
+				};
+
+				var options = {
+					displayModeBar: false,
+				};
+
+				Plotly.newPlot('dynamic-plot', [trace1, trace2], layout, options);
+			}
+
+			//Reveal.addEventListener( 'behavior-plot', makeBehaviorPlot);
+			//Reveal.addEventListener( 'event-plot', makeEventPlot);
+			//Reveal.addEventListener( 'dynamic-plot', makeDynamicPlot);
+
+			//Reveal.addEventListener( 'ready', function( event ) {
+				makeBehaviorPlot();
+				makeEventPlot();
+				makeDynamicPlot();
+			//} );
+
 		</script>
 	</body>
 </html>
