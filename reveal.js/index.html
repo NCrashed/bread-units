@@ -30,46 +30,54 @@
 					<h1>reflex-dom</h1>
 					Reactive Haskell frontend
 				</section>
-				<section>На кого расчитан доклад?</section>
+				<section><p>На кого рассчитан доклад?</p>
+				</section>
 				<section>План доклада</section>
-				<section>Что такое FRP?
+				<section>
+					<section>
+						<p>Что такое FRP</p>
+						<ul>
+							<li>Программа как асинхронный data flow</li>
+							<li>Акцент на распространение обновлений</li>
+							<li>Композиция и модульность</li>
+						</ul>
+					</section>
 					<section>
 						<p>Программа как асинхронный data flow</p>
-						<object type="image/svg+xml" data="img/frp_01.svg"></object>
+						<object class="bigimg" type="image/svg+xml" data="img/frp_01.svg"></object>
 					</section>
 					<section>
 						<p>Акцент на распространение обновлений</p>
-						<object type="image/svg+xml" data="img/frp_02.svg"></object>
+						<object class="bigimg" type="image/svg+xml" data="img/frp_02.svg"></object>
 					</section>
 					<section>
 						<p>Композиция и модульность</p>
-						<object type="image/svg+xml" data="img/frp_03.svg"></object>
+						<object class="bigimg" type="image/svg+xml" data="img/frp_03.svg"></object>
 					</section>
-				</section> 
-				<section>Зачем нужно FRP?
+				</section>
+				<section><p>Зачем нужно FRP?</p>
 					<ul>
 						<li>Замена callbacks на composable компоненты</li>
 						<li>GUI: desktop и web</li>
 						<li>Генерация музыки</li>
 						<li>Разработка игр</li>
-						<li>Поведение в робототехнике</li>
+						<li>Робототехника</li>
 					</ul>
-				</section> 
+				</section>
 				<section>
-					Модель reflex
-
 					<section>Behavior
 				    <pre><code data-trim data-noescape class="code haskell">
 							type Behavior a = Time -> a
 				    </code></pre>
 				    <ul>
 				    	<li>В любой момент времени имеет конкретное значение</li>
-				    	<li>Значение должно явно запрашиваться: 
+				    	<li>Значение должно явно запрашиваться:
 						    <pre><code data-trim data-noescape class="code haskell">
 									sample :: MonadSample m => Behavior a -> m a
 						    </code></pre>
 				    	</li>
 				    	<li>Нельзя получать уведомление о изменении значения</li>
+				    	<li>Нет внешних behavior, строятся на основе событий</li>
 				    </ul>
 					</section>
 					<section>Behavior
@@ -84,11 +92,12 @@
 				    </code></pre>
 				    <ul>
 				    	<li>Дискретный поток событий</li>
-				    	<li>Нет возможности узнать "текущее" значении
-						    <pre><code data-trim data-noescape class="code haskell">
+				    	<li>Нет возможности узнать "текущее" значение
+						    <pre><code style="width:1500px" data-trim data-noescape class="code haskell">
 									hold :: MonadHold m => a -> Event a -> m (Behavior a)
 						    </code></pre>
 						  </li>
+						  <li>Есть входные (внешние) и выходные события</li>
 				    </ul>
 					</section>
 					<section>Event
@@ -101,6 +110,11 @@
 				    <pre><code data-trim data-noescape class="code haskell">
 							type Dynamic a = (Behavior a, Event a)
 				    </code></pre>
+				    <ul>
+				    	<li>Дискретно меняющийся Behavior</li>
+				    	<li>Можно и семплировать, и получать оповещения об изменениях</li>
+				    	<li>Наиболее часто используемый примитив в <b>reflex-dom</b></li>
+				    </ul>
 					</section>
 					<section>Dynamic
 						<div class="center-wrap">
@@ -108,13 +122,25 @@
 						</div>
 					</section>
 
-					<section>Монадоидический API</section>
-					<section>Switching</section>
+					<section>Switching
+						<pre><code data-trim data-noescape class="code haskell">
+							join :: Dynamic (Dynamic a) -> Dynamic a
+				    </code></pre>
+				    <object class="bigimg" type="image/svg+xml" data="img/frp_04.svg"></object>
+					</section>
 				</section>
 				<section>
-					Пример
-					<section>Хлебные единицы</section>
-					<section>Server API</section>
+					<section>
+						<p><b>reflex-dom</b> на примере</p>
+						<ul>
+							<li>Посчитать количество углеводов в обеде</li>
+							<li>Демонстрация динамической коллекции компонентов</li>
+							<li>Показать типичный процесс разработки</li>
+						</ul>
+					</section>
+					<section><p>Server API</p>
+
+					</section>
 				</section>
 			</div>
 		</div>
@@ -129,7 +155,8 @@
 				history: true,
 				width: 1920,
     		height: 1080,
-
+    		minScale: 0.2,
+    		maxScale: 3,
 				// More info https://github.com/hakimel/reveal.js#dependencies
 				dependencies: [
 					{ src: 'plugin/markdown/marked.js' },
@@ -143,12 +170,25 @@
 
 			function makeBehaviorPlot() {
 				var trace1 = {
+				  x: [1, 1,  1,         2, 2,  2,         3, 3,  3,         4, 4,  4        ],
+				  y: [0, 10, undefined, 0, 15, undefined, 0, 13, undefined, 0, 17, undefined],
+				  type: 'scatter',
+				  name: "Выборка",
+				  line: {
+				    color: 'rgb(100, 100, 100)',
+				    width: 2
+				  },
+				};
+
+				var trace2 = {
 				  x: [1, 2, 3, 4],
 				  y: [10, 15, 13, 17],
 				  type: 'scatter',
+				  name: "Значение",
 				  line: {
 				    color: 'rgb(0, 0, 0)',
-				    width: 5
+				    width: 5,
+				    shape: 'spline',
 				  }
 				};
 
@@ -160,18 +200,18 @@
 				  yaxis: {
 				    title: 'Значение'
 				  },
-				  margin: {'b':75,'l':75, 'r':0, 't':0},
+				  margin: {'b':95,'l':95, 'r':0, 't':0},
 				  legend: {
 				  	font: { size: 38 },
 				  },
-				  font: { size: 28 },
+				  font: { size: 35 },
 				};
 
 				var options = {
 					displayModeBar: false,
 				};
 
-				Plotly.newPlot('behavior-plot', [trace1], layout, options);
+				Plotly.newPlot('behavior-plot', [trace1, trace2], layout, options);
 			}
 
 			function makeEventPlot() {
@@ -195,11 +235,11 @@
 				  yaxis: {
 				    title: 'Значение'
 				  },
-				  margin: {'b':75,'l':75, 'r':0, 't':0},
+				  margin: {'b':95,'l':95, 'r':0, 't':0},
 				  legend: {
 				  	font: { size: 38 },
 				  },
-				  font: { size: 28 },
+				  font: { size: 35 },
 				};
 
 				var options = {
@@ -215,7 +255,7 @@
 				  x: [1, 1,  1,         2, 2,  2,         3, 3,  3,         4, 4,  4        ],
 				  y: [0, 10, undefined, 0, 15, undefined, 0, 13, undefined, 0, 17, undefined],
 				  type: 'scatter',
-				  name: "События",
+				  name: "Событие",
 				  line: {
 				    color: 'rgb(100, 100, 100)',
 				    width: 2
@@ -226,7 +266,7 @@
 				  x: [1, 2, 3, 4],
 				  y: [10, 15, 13, 17],
 				  type: 'scatter',
-				  name: "Значения",
+				  name: "Значение",
 				  line: {
 				    color: 'rgb(0, 0, 0)',
 				    width: 4,
@@ -243,11 +283,11 @@
 				  yaxis: {
 				    title: 'Значение'
 				  },
-				  margin: {'b':75,'l':75, 'r':0, 't':0},
+				  margin: {'b':95,'l':95, 'r':0, 't':0},
 				  legend: {
 				  	font: { size: 38 },
 				  },
-				  font: { size: 28 },
+				  font: { size: 35 },
 				};
 
 				var options = {

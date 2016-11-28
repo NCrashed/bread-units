@@ -4,3 +4,5 @@
 .hljs { min-height: 50px; vertical-align: middle;}
 .hljs span { line-height: 50px; }
 .plot { width: 1920px; height: 800px;  }
+.bigimg { width: 1500px; }
+.headmargin { margin-bottom: 500px !important; }
