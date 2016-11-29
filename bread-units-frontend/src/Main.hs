@@ -1,5 +1,8 @@
-module Main where
+import Data.Text
+import Reflex.Dom
+
+lunchWidget :: MonadWidget t m => Text -> m ()
+lunchWidget name = elClass "div" "panel" $ text name
 
 main :: IO ()
-main = do
-  putStrLn "hello world"
+main = mainWidget $ elClass "div" "container" $ lunchWidget "Мёд"
