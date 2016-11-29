@@ -5,6 +5,21 @@ compiler-check: match-exact
 packages:
 - '.'
 - '../bread-units-api'
+- location:
+    git: git@github.com:reflex-frp/reflex.git
+    commit: 91299fce0bb2caddfba35af6608df57dd31e3690
+- location:
+    git: git@github.com:reflex-frp/reflex-dom.git
+    commit: 66b6d35773fcb337ab38ebce02c4b23baeae721e
+
+extra-deps:
+- 'servant-0.9.1'
+- 'servant-server-0.9.1'
+- 'http-api-data-0.3.3'
+- 'prim-uniq-0.1.0.1'
+- 'ref-tf-0.4.0.1'
+- 'ghcjs-dom-0.2.4.0'
+- 'zenc-0.1.1'
 
 setup-info:
   ghcjs:

@@ -138,7 +138,20 @@
 							<li>Показать типичный процесс разработки</li>
 						</ul>
 					</section>
-					<section><p>Server API</p>
+					<section data-markdown>
+						<script type="text/template">
+							<p>Server API</p>
+
+							* Единственный endpoint `product/{name}` для процентного содержания
+								углеводов в продукте.
+
+							``` haskell
+								type ServerAPI = "product" :> Capture "name" Text :> Get '[JSON] Double
+							```
+						</script>
+					</section>
+					<section data-markdown>
+							<p>Элемент обеда</p>
 
 					</section>
 				</section>
