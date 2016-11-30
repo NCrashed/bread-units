@@ -18,10 +18,11 @@ productCarbs' :: ProductName -> EitherT ServantError IO CarbPart
 productCarbs' = client serverAPI Nothing
 
 -- | Widget that queries product carbohydrates as soon as the widget is constructed
-productCarbs :: MonadWidget t m => ProductName -> m (Event t CarbPart)
+productCarbs :: MonadWidget t m => ProductName -> m (Dynamic t CarbPart)
 productCarbs name = do
-  e <- getPostBuild
-  simpleRequest (fmap (const name) e) productCarbs'
+  e  <- getPostBuild
+  e' <- simpleRequest (fmap (const name) e) productCarbs'
+  holdDyn 0 e'
 
 -- | Display ajax error
 printAjaxErr :: ServantError -> Text
