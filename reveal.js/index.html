@@ -186,6 +186,24 @@
 							<iframe style="width: 1000px; height: 300px;" src="http://localhost:8081/step01.html"></iframe>
 						</script>
 					</section>
+					<section data-markdown>
+						<script type="text/template">
+							<p>Элемент обеда</p>
+
+							``` haskell
+							lunchWidget :: MonadWidget t m => Text -> m ()
+							lunchWidget name = elClass "div" "panel" $ elClass "div" "row" $ do
+							  elClass "div" "col-md-2" $ text name
+							  elClass "div" "col-md-7" $ intInput 0
+							  return ()
+							```
+
+							``` haskell
+							intInput :: MonadWidget t m => Int -> m (Dynamic t Int)
+							```
+							<iframe style="width: 1000px; height: 300px;" src="http://localhost:8081/step02.html"></iframe>
+						</script>
+					</section>
 				</section>
 			</div>
 		</div>

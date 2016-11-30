@@ -17,11 +17,13 @@ executable bread-units-frontend
   main-is:             Main.hs
   default-language:    Haskell2010
   build-depends:
-      base       >= 4.7 && < 5
-    , reflex-dom >= 0.4 && < 0.5
-    , text       >= 1.2 && < 1.3
+      base       >= 4.7  && < 5
+    , lens       >= 4.14 && < 4.15
+    , reflex-dom >= 0.4  && < 0.5
+    , text       >= 1.2  && < 1.3
   default-extensions:
     OverloadedStrings
+    OverloadedLists
 
 source-repository head
   type:     git
