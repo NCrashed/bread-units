@@ -1,6 +1,7 @@
+import Client
+import Control.Lens
 import Data.Text
 import Reflex.Dom
-import Control.Lens
 import Text.Read
 
 showt :: Show a => a -> Text

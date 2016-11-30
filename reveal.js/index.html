@@ -146,7 +146,9 @@
 								углеводов в продукте.
 
 							``` haskell
-								type ServerAPI = "product" :> Capture "name" Text :> Get '[JSON] Double
+								type ProductName = Text
+								type CarbPart = Double
+								type ServerAPI = "product" :> Capture "name" ProductName :> Get '[JSON] CarbPart
 							```
 						</script>
 					</section>
