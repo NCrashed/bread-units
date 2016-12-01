@@ -76,6 +76,26 @@
 					</ul>
 				</section>
 				<section>
+					<section>
+						<p>Модель реактивности reflex</p>
+						<ul>
+							<li>Классическая push-pull семантика</li>
+							<li>Три базовых примитива:
+								<ul>
+									<li>Behavior</li>
+									<li>Event</li>
+									<li>Dynamic</li>
+								</ul>
+							<li>Динамическое перестраивание через switching</li>
+							</li>
+						</ul>
+					</section>
+
+					<section>Behavior
+						<div class="center-wrap">
+							<div class="center plot" id="behavior-plot"></div>
+						</div>
+					</section>
 					<section>Behavior
 				    <pre><code data-trim data-noescape class="bcode haskell">
 							type Behavior a = Time -> a
@@ -91,12 +111,12 @@
 				    	<li>Нет внешних behavior, строятся на основе событий</li>
 				    </ul>
 					</section>
-					<section>Behavior
+
+					<section>Event
 						<div class="center-wrap">
-							<div class="center plot" id="behavior-plot"></div>
+							<div class="center plot" id="event-plot"></div>
 						</div>
 					</section>
-
 					<section>Event
 				    <pre><code data-trim data-noescape class="bcode haskell">
 							type Event a = [(Time, a)]
@@ -111,12 +131,12 @@
 						  <li>Есть входные (внешние) и выходные события</li>
 				    </ul>
 					</section>
-					<section>Event
+
+					<section>Dynamic
 						<div class="center-wrap">
-							<div class="center plot" id="event-plot"></div>
+							<div class="center plot" id="dynamic-plot"></div>
 						</div>
 					</section>
-
 					<section>Dynamic
 				    <pre><code data-trim data-noescape class="bcode haskell">
 							type Dynamic a = (Behavior a, Event a)
@@ -127,13 +147,12 @@
 				    	<li>Наиболее часто используемый примитив в <b>reflex-dom</b></li>
 				    </ul>
 					</section>
-					<section>Dynamic
-						<div class="center-wrap">
-							<div class="center plot" id="dynamic-plot"></div>
-						</div>
-					</section>
 
-					<section>Switching
+					<section><p>Switching</p>
+						<ul>
+							<li>Хотим менять реактивную сеть динамически</li>
+							<li>Это основа для создания коллекций виджетов</li>
+						</ul>
 						<pre><code data-trim data-noescape class="bcode haskell">
 							join :: Dynamic (Dynamic a) -> Dynamic a
 				    </code></pre>
@@ -148,6 +167,9 @@
 							<li>Демонстрация динамической коллекции компонентов</li>
 							<li>Показать типичный процесс разработки</li>
 						</ul>
+					</section>
+					<section>
+						<iframe style="width: 1500px; height: 700px;" src="http://localhost:8081/step05.html"></iframe>
 					</section>
 					<section data-markdown>
 						<script type="text/template">
@@ -180,8 +202,8 @@ main = <span class="fragment highlight-current-red" data-fragment-index="3">main
 						</code></pre>
 
 						<pre><code data-trim data-noescape class="code haskell">
-el   :: MonadWidget t m => String -> m a -> m a
-text :: MonadWidget t m => String -> m ()
+el   :: MonadWidget t m => Text -> m a -> m a
+text :: MonadWidget t m => Text -> m ()
 mainWidget :: Widget () -> IO ()
 						</code></pre>
 
@@ -199,7 +221,7 @@ main = mainWidget $ lunchItem "Мёд"
 						</code></pre>
 
 						<pre><code data-trim data-noescape class="code haskell">
-elClass :: MonadWidget t m => String -> String -> m a -> m a
+elClass :: MonadWidget t m => Text -> Text -> m a -> m a
 						</code></pre>
 
 						<iframe style="width: 1500px; height: 300px;" src="http://localhost:8081/step01.html"></iframe>
@@ -244,7 +266,8 @@ lunchItem name = panel $ row $ do
 
 						<pre><code data-trim data-noescape class="code haskell">
 productCarbs :: MonadWidget t m => ProductName -> m (Dynamic t CarbPart)
-dynText :: MonadWidget t m => Dynamic t String -> m ()
+showt :: Show a => a -> Text
+dynText :: MonadWidget t m => Dynamic t Text -> m ()
 						</code></pre>
 
 						<iframe style="width: 1500px; height: 200px;" src="http://localhost:8081/step03.html"></iframe>
@@ -255,14 +278,16 @@ dynText :: MonadWidget t m => Dynamic t String -> m ()
 
 						<pre><code data-trim data-noescape class="code haskell">
 lunchItem :: MonadWidget t m => ProductName -> m (Dynamic t Gramms)
-  -- ...
-  <span class="fragment highlight-current-red" data-fragment-index="1">grammsDyn</span> <- md7 $ intInput "Грамм" 0
-  <span class="fragment highlight-current-red" data-fragment-index="2">carbPartDyn</span> <- productCarbs name
-  -- ...
+  -- Пропуск ...
   return $ do
     gramms <- <span class="fragment highlight-current-red" data-fragment-index="1">grammsDyn</span>
     p <- <span class="fragment highlight-current-red" data-fragment-index="2">carbPartDyn</span>
     return $ round (fromIntegral gramms * p)
+						</code></pre>
+
+						<pre><code data-trim data-noescape class="code haskell">
+gramms <- <span class="fragment highlight-current-red" data-fragment-index="3">lunchItem</span> "Мёд"
+<span class="fragment highlight-current-red" data-fragment-index="4">dynText $ fmap (\v -> showt v <> " г углеводов") grams</span>
 						</code></pre>
 
 						<pre><code data-trim data-noescape class="code haskell">
