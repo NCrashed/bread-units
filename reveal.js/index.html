@@ -31,8 +31,19 @@
 					Reactive Haskell frontend
 				</section>
 				<section><p>На кого рассчитан доклад?</p>
+					<ul>
+						<li>Знакомы с Haskell</li>
+						<li>Любопытна тематика реактивности</li>
+						<li>Боитесь GHCJS</li>
+					</ul>
 				</section>
-				<section>План доклада</section>
+				<section><p>План</p>
+					<ul>
+						<li>Что такое FRP?</li>
+						<li>Основы reflex</li>
+						<li>Пример</li>
+					</ul>
+				</section>
 				<section>
 					<section>
 						<p>Что такое FRP</p>
@@ -155,83 +166,85 @@
 							* Благодаря DSL мы бесплатно получаем клиент:
 
 								``` haskell
-								productCarbs :: MonadWidget t m => ProductName -> m (Event t CarbPart)
+								productCarbs :: MonadWidget t m => ProductName -> m (Dynamic t CarbPart)
 								```
 						</script>
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-							<p>Hello world</p>
+					<section>
+						<p>Hello world</p>
 
-							``` haskell
-							import Reflex.Dom
+						<pre><code data-trim data-noescape class="code haskell">
+import Reflex.Dom
 
-							main = mainWidget $ el "div" $ text "Welcome to Reflex"
-							```
+main = <span class="fragment highlight-current-red" data-fragment-index="3">mainWidget</span> $ <span class="fragment highlight-current-red" data-fragment-index="2">el "div"</span> $ <span class="fragment highlight-current-red" data-fragment-index="1">text "Welcome to Reflex"</span>
+						</code></pre>
 
-							``` haskell
-							el   :: MonadWidget t m => String -> m a -> m a
-							text :: MonadWidget t m => String -> m ()
-							```
+						<pre><code data-trim data-noescape class="code haskell">
+el   :: MonadWidget t m => String -> m a -> m a
+text :: MonadWidget t m => String -> m ()
+mainWidget :: Widget () -> IO ()
+						</code></pre>
 
-							<iframe style="width: 1500px; height: 300px;" src="http://localhost:8081/step00.html"></iframe>
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							<p>Элемент обеда</p>
-
-							``` haskell
-							lunchWidget :: MonadWidget t m => Text -> m ()
-							lunchWidget name = elClass "div" "panel" $ text name
-
-							main :: IO ()
-							main = mainWidget $ lunchWidget "Мёд"
-							```
-
-							``` haskell
-							elClass :: MonadWidget t m => String -> String -> m a -> m a
-							```
-							<iframe style="width: 1500px; height: 300px;" src="http://localhost:8081/step01.html"></iframe>
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							<p>Элемент обеда</p>
-
-							``` haskell
-							lunchWidget :: MonadWidget t m => Text -> m ()
-							lunchWidget name = elClass "div" "panel" $ elClass "div" "row" $ do
-							  elClass "div" "col-md-2" $ text name
-							  grammsDyn <- elClass "div" "col-md-7" $ intInput 0
-							  return ()
-							```
-
-							``` haskell
-							intInput :: MonadWidget t m => Int -> m (Dynamic t Int)
-							```
-							<iframe style="width: 1500px; height: 300px;" src="http://localhost:8081/step02.html"></iframe>
-						</script>
+						<iframe style="width: 1500px; height: 300px;" src="http://localhost:8081/step00.html"></iframe>
 					</section>
 					<section>
 						<p>Элемент обеда</p>
 
 						<pre><code data-trim data-noescape class="code haskell">
-lunchWidget :: MonadWidget t m => Text -> m ()
-lunchWidget name = elClass "div" "panel" $ elClass "div" "row" $ do
-  elClass "div" "col-md-2" $ text name
-  grammsDyn <- elClass "div" "col-md-7" $ intInput 0
+lunchItem :: MonadWidget t m => ProductName -> m ()
+lunchItem name = elClass "div" "panel" $ text name
 
-  carbPartEvent <- <span class="fragment highlight-current-red">productCarbs</span> name
-  elClass "div" "col-md-2" $ do
-    <span class="fragment highlight-current-red">widgetHold</span> (text "0%") $ fmap <span class="fragment highlight-current-red">(\v -> text $ showt v <> "%")</span> carbPartEvent
+main :: IO ()
+main = mainWidget $ lunchItem "Мёд"
+						</code></pre>
+
+						<pre><code data-trim data-noescape class="code haskell">
+elClass :: MonadWidget t m => String -> String -> m a -> m a
+						</code></pre>
+
+						<iframe style="width: 1500px; height: 300px;" src="http://localhost:8081/step01.html"></iframe>
+
+					</section>
+					<section>
+						<p>Элемент обеда</p>
+
+						<pre><code data-trim data-noescape class="code haskell">
+lunchItem :: MonadWidget t m => ProductName -> m ()
+lunchItem name = <span class="fragment highlight-current-red">panel</span> $ <span class="fragment highlight-current-red">row</span> $ do
+  <span class="fragment highlight-current-red">md2</span> $ text name
+  grammsDyn <- <span class="fragment highlight-current-red">md7</span> $ <span class="fragment highlight-current-red">intInput</span> "Грамм" 0
+  return ()
+						</code></pre>
+
+						<pre><code data-trim data-noescape class="code haskell">
+panel = elClass "div" "panel"
+row = elClass "div" row
+md2 = elClass "col-md-2"
+md7 = elClass "col-md-7"
+intInput :: MonadWidget t m => Text -> Int -> m (Dynamic t Int)
+						</code></pre>
+
+						<iframe style="width: 1500px; height: 300px;" src="http://localhost:8081/step02.html"></iframe>
+
+					</section>
+					<section>
+						<p>Элемент обеда</p>
+
+						<pre><code data-trim data-noescape class="code haskell">
+lunchItem :: MonadWidget t m => ProductName -> m ()
+lunchItem name = panel $ row $ do
+  md2 $ text name
+  grammsDyn <- md7 $ intInput "Грамм" 0
+
+  carbPartDyn <- <span class="fragment highlight-current-red">productCarbs</span> name
+  <span class="fragment highlight-current-red">dynText</span> $ fmap <span class="fragment highlight-current-red">(\v -> showt v <> "%")</span> carbPartDyn
 
   return ()
 						</code></pre>
 
 						<pre><code data-trim data-noescape class="code haskell">
-productCarbs :: MonadWidget t m => ProductName -> m (Event t CarbPart)
-widgetHold :: MonadWidget t m => m a -> Event t (m a) -> m (Dynamic t a)
+productCarbs :: MonadWidget t m => ProductName -> m (Dynamic t CarbPart)
+dynText :: MonadWidget t m => Dynamic t String -> m ()
 						</code></pre>
 
 						<iframe style="width: 1500px; height: 200px;" src="http://localhost:8081/step03.html"></iframe>
@@ -241,25 +254,61 @@ widgetHold :: MonadWidget t m => m a -> Event t (m a) -> m (Dynamic t a)
 						<p>Элемент обеда</p>
 
 						<pre><code data-trim data-noescape class="code haskell">
-lunchWidget :: MonadWidget t m => Text -> m (Dynamic t Gramms)
+lunchItem :: MonadWidget t m => ProductName -> m (Dynamic t Gramms)
   -- ...
-  <span class="fragment highlight-current-red">grammsDyn</span> <- intInput 0
-  <span class="fragment highlight-current-red">carbPartEvent</span> <- productCarbs name
+  <span class="fragment highlight-current-red" data-fragment-index="1">grammsDyn</span> <- md7 $ intInput "Грамм" 0
+  <span class="fragment highlight-current-red" data-fragment-index="2">carbPartDyn</span> <- productCarbs name
   -- ...
-  let carbsEvent = <span class="fragment highlight-current-red">attachPromptlyDynWith</span> calcCarbs grammsDyn carbPartEvent
-  <span class="fragment highlight-current-red">holdDyn</span> 0 carbsEvent
-
-calcCarbs :: Gramms -> CarbPart -> Gramms
-calcCarbs gramms p = round (fromIntegral gramms * p)
+  return $ do
+    gramms <- <span class="fragment highlight-current-red" data-fragment-index="1">grammsDyn</span>
+    p <- <span class="fragment highlight-current-red" data-fragment-index="2">carbPartDyn</span>
+    return $ round (fromIntegral gramms * p)
 						</code></pre>
 
 						<pre><code data-trim data-noescape class="code haskell">
-attachPromptlyDynWith :: (a -> b -> c) -> Dynamic a -> Event b -> Event c
-holdDyn :: MonadHold t m => a -> Event a -> m (Dynamic a)
+instance Monad (Dynamic t)
+grammsDyn :: Dynamic t Gramms
+carbPartDyn :: Dynamic t CarbPart
 						</code></pre>
 
-						<iframe style="width: 1500px; height: 200px;" src="http://localhost:8081/step03.html"></iframe>
+						<iframe style="width: 1500px; height: 200px;" src="http://localhost:8081/step04.html"></iframe>
 					</section>
+
+					<section>
+						<p>Собираем обед</p>
+
+						<pre><code data-trim data-noescape class="code haskell">
+lunchWidget :: MonadWidget t m => m (Dynamic t Gramms)
+lunchWidget = do
+  <span class="fragment highlight-current-red" data-fragment-index="1">rec</span>
+    grammsDyn :: Dynamic t [Dynamic t Gramms] <- <span class="fragment highlight-current-red" data-fragment-index="3">collection</span> <span class="fragment highlight-current-red" data-fragment-index="1">nameE</span> lunchItem
+    <span class="fragment highlight-current-red" data-fragment-index="1">nameE</span> <- <span class="fragment highlight-current-red" data-fragment-index="2">enterInput</span>
+  return $ do
+    gramms <- grammsDyn
+    fmap sum $ sequence gramms
+						</code></pre>
+
+						<pre><code data-trim data-noescape class="code haskell">
+lunchItem :: MonadWidget t m => ProductName -> m (Dynamic t Gramms)
+enterInput :: MonadWidget t m => m (Event t Text)
+collection :: (MonadWidget t m, Ord a) => Event t a -> (a -> m b) -> m (Dynamic t [b])
+						</code></pre>
+
+						<iframe style="width: 1500px; height: 600px;" src="http://localhost:8081/step05.html"></iframe>
+					</section>
+				</section>
+				<section>
+					<p>Выводы</p>
+					<ul>
+						<li>Реактивный frontend на Haskell</li>
+						<li>Общий код клиента и сервера</li>
+						<li>Статические гарантии</li>
+					</ul>
+				</section>
+				<section>
+					<ul>
+						<li><a href="https://github.com/NCrashed/bread-units">https://github.com/NCrashed/bread-units</a></li>
+					</ul>
 				</section>
 			</div>
 		</div>

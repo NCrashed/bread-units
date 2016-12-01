@@ -1,3 +1,4 @@
+{-# LANGUAGE LambdaCase #-}
 module Client(
     productCarbs
   ) where
@@ -11,49 +12,25 @@ import Data.Monoid
 import Data.Text
 import Reflex.Dom
 import Servant.API
-import Servant.Client
+import Servant.Reflex
+import Data.Proxy
 
 -- | Low-level derived method for getting a carbohydrates part of product
-productCarbs' :: ProductName -> EitherT ServantError IO CarbPart
-productCarbs' = client serverAPI Nothing
+productCarbs' :: forall t m . MonadWidget t m
+  => Dynamic t (Either Text ProductName) -- ^ Value of product name
+  -> Event t () -- ^ Trigger of the request
+  -> m (Event t (ReqResult CarbPart))
+productCarbs' = client serverAPI (Proxy :: Proxy m) (pure (BasePath "/"))
 
 -- | Widget that queries product carbohydrates as soon as the widget is constructed
 productCarbs :: MonadWidget t m => ProductName -> m (Dynamic t CarbPart)
 productCarbs name = do
-  e  <- getPostBuild
-  e' <- simpleRequest (fmap (const name) e) productCarbs'
-  holdDyn 0 e'
-
--- | Display ajax error
-printAjaxErr :: ServantError -> Text
-printAjaxErr err = case err of
-  FailureResponse {..} -> "Failure: " <> pack (show responseStatus)
-  DecodeFailure {..} -> pack decodeError
-  UnsupportedContentType {..} -> "Unsupported content type"
-  InvalidContentTypeHeader {..} -> "Invalid content type header"
-
--- | Perform async ajax request
-asyncAjax :: MonadWidget t m => (a -> EitherT ServantError IO b) -- ^ Raw ajax requester
-  -> Event t a -- ^ Input data
-  -> m (Event t (Either Text b)) -- ^ Either an error or result
-asyncAjax action e = performEventAsync $ ffor e $ \a cb -> do
-  resp <- liftIO newEmptyMVar
-  _ <- liftIO $ forkIO $ putMVar resp =<< runEitherT (action a)
-  _ <- liftIO $ forkIO $ cb . first printAjaxErr =<< takeMVar resp
-  return ()
-
--- | Helper to request server
---
--- Prints errors in "danger" bootstrap panel.
-simpleRequest :: MonadWidget t m
-  => Event t a -- ^ Input arguments
-  -> (a -> EitherT ServantError IO b) -- ^ Request function
-  -> m (Event t b) -- ^ Result
-simpleRequest ea req = do
-  reqEv <- asyncAjax req ea
-  _ <- widgetHold (pure ()) $ ffor reqEv $ \resp -> case resp of
-    Left er -> danger er
-    Right _ -> return ()
-  return $ fforMaybe reqEv $ either (const Nothing) Just
+  e <- getPostBuild
+  respE <- productCarbs' (pure (Right name)) e
+  widgetHold (return ()) $ ffor respE $ \case
+    ResponseSuccess _ _ -> return ()
+    ResponseFailure msg _ -> danger msg
+    RequestFailure msg -> danger msg
+  holdDyn 0 $ fforMaybe respE reqSuccess
   where
-  danger = elClass "div" "alert alert-danger" . text
+    danger = elClass "div" "alert alert-danger" . text
