@@ -11,7 +11,7 @@
 		<link rel="stylesheet" href="css/theme/white.css">
 
 		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
+		<link rel="stylesheet" href="lib/css/github.css">
 
 		<!-- Printing and PDF exports -->
 		<script>
@@ -26,57 +26,107 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>
+				<section data-transition="none">
 					<h1>reflex-dom</h1>
 					Reactive Haskell frontend
 				</section>
-				<section><p>На кого рассчитан доклад?</p>
+				<section data-transition="none"><h3>На кого рассчитан доклад?</h3>
 					<ul>
 						<li>Знакомы с Haskell</li>
 						<li>Любопытна тематика реактивности</li>
-						<li>Боитесь GHCJS</li>
 					</ul>
 				</section>
-				<section><p>План</p>
+				<section data-transition="none"><h3>План</h3>
 					<ul>
 						<li>Что такое FRP?</li>
 						<li>Основы reflex</li>
 						<li>Пример</li>
 					</ul>
 				</section>
-				<section>
-					<section>
-						<p>Что такое FRP</p>
+				<section data-transition="none">
+					<section data-transition="none">
+						<h3>Что такое FRP?</h3>
 						<ul>
 							<li>Программа как асинхронный data flow</li>
 							<li>Акцент на распространение обновлений</li>
 							<li>Композиция и модульность</li>
 						</ul>
 					</section>
-					<section>
+					<section data-transition="none">
+						<p>Простейшая MMO игра</p>
+						<iframe style="width: 1500px; height: 200px;" src="http://localhost:8081/mmo.html"></iframe>
+					</section>
+					<section data-transition="none">
 						<p>Программа как асинхронный data flow</p>
-						<object class="bigimg" type="image/svg+xml" data="img/frp_01.svg"></object>
+						<object class="bigimg" type="image/svg+xml" data="img/frp_05.svg"></object>
 					</section>
-					<section>
+					<section data-transition="none">
 						<p>Акцент на распространение обновлений</p>
-						<object class="bigimg" type="image/svg+xml" data="img/frp_02.svg"></object>
+						<object class="bigimg" type="image/svg+xml" data="img/frp_06.svg"></object>
 					</section>
-					<section>
+					<section data-transition="none">
+						<p>Акцент на распространение обновлений</p>
+						<object class="bigimg" type="image/svg+xml" data="img/frp_07.svg"></object>
+					</section>
+					<section data-transition="none">
 						<p>Композиция и модульность</p>
-						<object class="bigimg" type="image/svg+xml" data="img/frp_03.svg"></object>
+						<img class="bigimg" src="img/component_component.png">
+					</section>
+					<section data-transition="none">
+						<p>Композиция и модульность</p>
+						<p class="fragment fade-up bigtext">map</p>
+						<p class="fragment fade-up bigtext">filter</p>
+						<p class="fragment fade-up bigtext">fold</p>
+						<p class="fragment fade-up bigtext">Applicative</p>
+						<p class="fragment fade-up bigtext">Monad</p>
 					</section>
 				</section>
-				<section><p>Зачем нужно FRP?</p>
-					<ul>
-						<li>Замена callbacks на composable компоненты</li>
-						<li>GUI: desktop и web</li>
-						<li>Генерация музыки</li>
-						<li>Разработка игр</li>
-						<li>Робототехника</li>
-					</ul>
+				<section data-transition="none"><p>Зачем нужно FRP?</p>
+					<section data-transition="none">
+						<p>Анимация</p>
+						<ul><li>Первая реализация FRP: Fran</li></ul>
+						<br>
+						<img style="width: 500px" src="img/patOrbitsCharlotte.gif">
+					</section>
+					<section data-transition="none">
+						<p>GUI: Замена callbacks</p>
+						<pre><code style="min-height: 500px" data-trim data-noescape class="bcode haskell">
+asyncFunc1(function(err, resut) {
+  asyncFunc2(function(err, result) {
+    asyncFunc3(function(err, result) {
+      asyncFunc4(function(err, result) {
+        // try to terminate this!
+      });
+    });
+  });
+});
+				    </code></pre>
+					</section>
+					<section data-transition="none">
+						<p>Генерация музыки</p>
+						<ul>
+							<li>Библиотека YampaSynth</li>
+						</ul>
+					</section>
+					<section data-transition="none">
+						<p>Разработка игр</p>
+						<ul>
+							<li>Клон Quake: Frag
+						</ul>
+						<br>
+						<img style="width: 900px" src="img/frag2.jpg">
+					</section>
+					<section data-transition="none">
+						<p>Робототехника</p>
+						<ul>
+							<li>UPenn's Grasp lab</li>
+							<li>Galois</li>
+						</ul><br>
+						<img style="width: 700px" src="img/galois.jpg">
+					</section>
 				</section>
-				<section>
-					<section>
+				<section data-transition="none">
+					<section data-transition="none">
 						<p>Модель реактивности reflex</p>
 						<ul>
 							<li>Классическая push-pull семантика</li>
@@ -86,17 +136,15 @@
 									<li>Event</li>
 									<li>Dynamic</li>
 								</ul>
-							<li>Динамическое перестраивание через switching</li>
-							</li>
 						</ul>
 					</section>
 
-					<section>Behavior
+					<section data-transition="none">Behavior
 						<div class="center-wrap">
 							<div class="center plot" id="behavior-plot"></div>
 						</div>
 					</section>
-					<section>Behavior
+					<section data-transition="none">Behavior
 				    <pre><code data-trim data-noescape class="bcode haskell">
 							type Behavior a = Time -> a
 				    </code></pre>
@@ -107,17 +155,16 @@
 									sample :: MonadSample m => Behavior a -> m a
 						    </code></pre>
 				    	</li>
-				    	<li>Нельзя получать уведомление о изменении значения</li>
-				    	<li>Нет внешних behavior, строятся на основе событий</li>
+				    	<li>Нельзя получать уведомления об изменении значения</li>
 				    </ul>
 					</section>
 
-					<section>Event
+					<section data-transition="none">Event
 						<div class="center-wrap">
 							<div class="center plot" id="event-plot"></div>
 						</div>
 					</section>
-					<section>Event
+					<section data-transition="none">Event
 				    <pre><code data-trim data-noescape class="bcode haskell">
 							type Event a = [(Time, a)]
 				    </code></pre>
@@ -131,13 +178,17 @@
 						  <li>Есть входные (внешние) и выходные события</li>
 				    </ul>
 					</section>
+					<section data-transition="none">
+						<p>Входные и выходные события</p>
+						<object class="bigimg" type="image/svg+xml" data="img/frp_09.svg"></object>
+					</section>
 
-					<section>Dynamic
+					<section data-transition="none">Dynamic
 						<div class="center-wrap">
 							<div class="center plot" id="dynamic-plot"></div>
 						</div>
 					</section>
-					<section>Dynamic
+					<section data-transition="none">Dynamic
 				    <pre><code data-trim data-noescape class="bcode haskell">
 							type Dynamic a = (Behavior a, Event a)
 				    </code></pre>
@@ -148,7 +199,7 @@
 				    </ul>
 					</section>
 
-					<section><p>Switching</p>
+<!-- 					<section data-transition="none"><p>Switching</p>
 						<ul>
 							<li>Хотим менять реактивную сеть динамически</li>
 							<li>Это основа для создания коллекций виджетов</li>
@@ -157,180 +208,201 @@
 							join :: Dynamic (Dynamic a) -> Dynamic a
 				    </code></pre>
 				    <object class="bigimg" type="image/svg+xml" data="img/frp_04.svg"></object>
-					</section>
+					</section> -->
 				</section>
-				<section>
-					<section>
-						<p><b>reflex-dom</b> на примере</p>
+				<section data-transition="none">
+					<section data-transition="none">
+						<h3>Пример</h3>
 						<ul>
 							<li>Посчитать количество углеводов в обеде</li>
-							<li>Демонстрация динамической коллекции компонентов</li>
-							<li>Показать типичный процесс разработки</li>
+							<li>Обед состоит из элементов – продуктов</li>
+							<li>Узнать у сервера содержание углеводов в продукте</li>
+							<li>Проссумировать углеводы по продуктам</li>
 						</ul>
 					</section>
-					<section>
+					<section data-transition="none">
 						<iframe style="width: 1500px; height: 700px;" src="http://localhost:8081/step05.html"></iframe>
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-							<p>Server API</p>
+					<section data-transition="none">
+						<h3>Server API</h3>
 
-							* Единственный endpoint `product/{name}` для процентного содержания
-								углеводов в продукте.
-
-								``` haskell
-								type ProductName = Text
-								type CarbPart = Double
-
-								type ServerAPI = "product" :> Capture "name" ProductName :> Get '[JSON] CarbPart
-								```
-
-							* Благодаря DSL мы бесплатно получаем клиент:
-
-								``` haskell
-								productCarbs :: MonadWidget t m => ProductName -> m (Dynamic t CarbPart)
-								```
-						</script>
+						<ul>
+							<li>Единственный endpoint <code>product/{name}</code> для процентного содержания
+							углеводов в продукте.
+								<pre><code data-trim data-noescape class="bbcode haskell">
+type ServerAPI = "product"
+	:> Capture "name" ProductName
+	:> Get '[JSON] CarbPart
+								</code></pre>
+							</li>
+						</ul>
 					</section>
-					<section>
-						<p>Hello world</p>
+					<section data-transition="none">
+						<h3>Server API</h3>
+						<ul>
+							<li> Благодаря Servant DSL мы бесплатно получаем клиент:
+							</li>
+						</ul>
+						<pre><code data-trim data-noescape class="bbcode haskell">
+productCarbs :: MonadWidget m
+	=> ProductName -> m (Dynamic CarbPart)
+						</code></pre>
+					</section>
+					<section data-transition="none">
+						<h3>Hello world</h3>
 
-						<pre><code data-trim data-noescape class="code haskell">
+						<pre><code data-trim data-noescape class="bbcode haskell">
 import Reflex.Dom
 
-main = <span class="fragment highlight-current-red" data-fragment-index="3">mainWidget</span> $ <span class="fragment highlight-current-red" data-fragment-index="2">el "div"</span> $ <span class="fragment highlight-current-red" data-fragment-index="1">text "Welcome to Reflex"</span>
+main = mainWidget $ el "div" $
+         text "Welcome to Reflex"
 						</code></pre>
 
-						<pre><code data-trim data-noescape class="code haskell">
-el   :: MonadWidget t m => Text -> m a -> m a
-text :: MonadWidget t m => Text -> m ()
+						<iframe style="width: 1500px; height: 100px;" src="http://localhost:8081/step00.html"></iframe>
+
+						<pre><code data-trim data-noescape class="bbcode haskell">
+el   :: MonadWidget m => Text -> m a -> m a
+text :: MonadWidget m => Text -> m ()
 mainWidget :: Widget () -> IO ()
 						</code></pre>
 
-						<iframe style="width: 1500px; height: 300px;" src="http://localhost:8081/step00.html"></iframe>
 					</section>
-					<section>
-						<p>Элемент обеда</p>
+					<section data-transition="none">
+						<h3>Элемент обеда</h3>
 
-						<pre><code data-trim data-noescape class="code haskell">
-lunchItem :: MonadWidget t m => ProductName -> m ()
-lunchItem name = elClass "div" "panel" $ text name
-
-main :: IO ()
-main = mainWidget $ lunchItem "Мёд"
-						</code></pre>
-
-						<pre><code data-trim data-noescape class="code haskell">
-elClass :: MonadWidget t m => Text -> Text -> m a -> m a
-						</code></pre>
-
-						<iframe style="width: 1500px; height: 300px;" src="http://localhost:8081/step01.html"></iframe>
-
-					</section>
-					<section>
-						<p>Элемент обеда</p>
-
-						<pre><code data-trim data-noescape class="code haskell">
-lunchItem :: MonadWidget t m => ProductName -> m ()
-lunchItem name = <span class="fragment highlight-current-red">panel</span> $ <span class="fragment highlight-current-red">row</span> $ do
-  <span class="fragment highlight-current-red">md2</span> $ text name
-  grammsDyn <- <span class="fragment highlight-current-red">md7</span> $ <span class="fragment highlight-current-red">intInput</span> "Грамм" 0
-  return ()
-						</code></pre>
-
-						<pre><code data-trim data-noescape class="code haskell">
-panel = elClass "div" "panel"
-row = elClass "div" row
-md2 = elClass "col-md-2"
-md7 = elClass "col-md-7"
-intInput :: MonadWidget t m => Text -> Int -> m (Dynamic t Int)
-						</code></pre>
-
-						<iframe style="width: 1500px; height: 300px;" src="http://localhost:8081/step02.html"></iframe>
-
-					</section>
-					<section>
-						<p>Элемент обеда</p>
-
-						<pre><code data-trim data-noescape class="code haskell">
-lunchItem :: MonadWidget t m => ProductName -> m ()
+						<pre><code data-trim data-noescape class="bbcode haskell">
+lunchItem :: MonadWidget m
+	=> ProductName -> m (Dynamic Gramms)
 lunchItem name = panel $ row $ do
   md2 $ text name
   grammsDyn <- md7 $ intInput "Грамм" 0
 
-  carbPartDyn <- <span class="fragment highlight-current-red">productCarbs</span> name
-  <span class="fragment highlight-current-red">dynText</span> $ fmap <span class="fragment highlight-current-red">(\v -> showt v <> "%")</span> carbPartDyn
-
-  return ()
+  -- to be continued
 						</code></pre>
 
-						<pre><code data-trim data-noescape class="code haskell">
-productCarbs :: MonadWidget t m => ProductName -> m (Dynamic t CarbPart)
-showt :: Show a => a -> Text
-dynText :: MonadWidget t m => Dynamic t Text -> m ()
+						<iframe style="width: 1500px; height: 100px;" src="http://localhost:8081/step02.html"></iframe>
+
+						<pre><code data-trim data-noescape class="bbcode haskell">
+panel = elClass "div" "panel"
+	-- тоже самое row, md2, md7
+
+intInput :: MonadWidget m
+	=> Text -> Int -> m (Dynamic Int)
 						</code></pre>
 
-						<iframe style="width: 1500px; height: 200px;" src="http://localhost:8081/step03.html"></iframe>
+
 					</section>
 
-					<section>
-						<p>Элемент обеда</p>
+					<section data-transition="none">
+						<h3>Элемент обеда</h3>
 
-						<pre><code data-trim data-noescape class="code haskell">
-lunchItem :: MonadWidget t m => ProductName -> m (Dynamic t Gramms)
-  -- Пропуск ...
-  return $ do
-    gramms <- <span class="fragment highlight-current-red" data-fragment-index="1">grammsDyn</span>
-    p <- <span class="fragment highlight-current-red" data-fragment-index="2">carbPartDyn</span>
+						<pre><code data-trim data-noescape class="bbcode haskell">
+lunchItem name = -- ...
+  -- skipped
+  carbPartDyn <- productCarbs name
+  let toLabel v = showt (100 * v) <> "%"
+  dynText $ fmap toLabel carbPartDyn
+  -- to be continued
+						</code></pre>
+
+						<iframe style="width: 1500px; height: 100px;" src="http://localhost:8081/step03.html"></iframe>
+
+						<pre><code data-trim data-noescape class="bbcode haskell">
+productCarbs :: MonadWidget m
+	=> ProductName -> m (Dynamic CarbPart)
+
+dynText :: MonadWidget m => Dynamic Text -> m ()
+						</code></pre>
+
+					</section>
+
+					<section data-transition="none">
+						<h3>Functor</h3>
+						<object class="bigimg" type="image/svg+xml" data="img/frp_10.svg"></object>
+					</section>
+
+					<section data-transition="none">
+						<h3>Элемент обеда</h3>
+
+						<pre><code data-trim data-noescape class="bbcode haskell">
+lunchItem :: MonadWidget m
+	=> ProductName -> m (Dynamic Gramms)
+  -- skipped ...
+  return $ do -- ныряем в монаду Dynamic
+    gramms <- grammsDyn
+    p <- carbPartDyn
     return $ round (fromIntegral gramms * p)
 						</code></pre>
 
-						<pre><code data-trim data-noescape class="code haskell">
-gramms <- <span class="fragment highlight-current-red" data-fragment-index="3">lunchItem</span> "Мёд"
-<span class="fragment highlight-current-red" data-fragment-index="4">dynText $ fmap (\v -> showt v <> " г углеводов") grams</span>
-						</code></pre>
-
-						<pre><code data-trim data-noescape class="code haskell">
-instance Monad (Dynamic t)
-grammsDyn :: Dynamic t Gramms
-carbPartDyn :: Dynamic t CarbPart
-						</code></pre>
-
 						<iframe style="width: 1500px; height: 200px;" src="http://localhost:8081/step04.html"></iframe>
+
+						<pre><code data-trim data-noescape class="bbcode haskell">
+grammsDyn :: Dynamic Gramms
+carbPartDyn :: Dynamic CarbPart
+						</code></pre>
+
 					</section>
 
-					<section>
-						<p>Собираем обед</p>
+					<section data-transition="none">
+						<h3>Monad</h3>
+						<object class="bigimg" type="image/svg+xml" data="img/frp_11.svg"></object>
+					</section>
 
-						<pre><code data-trim data-noescape class="code haskell">
-lunchWidget :: MonadWidget t m => m (Dynamic t Gramms)
+					<section data-transition="none">
+						<h3>Собираем обед</h3>
+
+						<pre><code data-trim data-noescape class="bbcode haskell">
+lunchWidget :: MonadWidget m => m (Dynamic Gramms)
 lunchWidget = do
-  <span class="fragment highlight-current-red" data-fragment-index="1">rec</span>
-    grammsDyn :: Dynamic t [Dynamic t Gramms] <- <span class="fragment highlight-current-red" data-fragment-index="3">collection</span> <span class="fragment highlight-current-red" data-fragment-index="1">nameE</span> lunchItem
-    <span class="fragment highlight-current-red" data-fragment-index="1">nameE</span> <- <span class="fragment highlight-current-red" data-fragment-index="2">enterInput</span>
-  return $ do
-    gramms <- grammsDyn
-    fmap sum $ sequence gramms
+  rec grammsDynDyn <- collection nameE lunchItem
+      nameE <- enterInput
+  -- to be continued
 						</code></pre>
 
-						<pre><code data-trim data-noescape class="code haskell">
-lunchItem :: MonadWidget t m => ProductName -> m (Dynamic t Gramms)
-enterInput :: MonadWidget t m => m (Event t Text)
-collection :: (MonadWidget t m, Ord a) => Event t a -> (a -> m b) -> m (Dynamic t [b])
+						<pre><code data-trim data-noescape class="bbcode haskell">
+enterInput :: MonadWidget m => m (Event Text)
+collection :: (MonadWidget m, Ord a)
+	=> Event a
+	-> (a -> m b)
+	-> m (Dynamic [b])
+						</code></pre>
+					</section>
+
+					<section data-transition="none">
+						<h3>Собираем обед</h3>
+
+						<pre><code data-trim data-noescape class="bbcode haskell">
+lunchWidget :: MonadWidget m => m (Dynamic Gramms)
+lunchWidget = -- skipped ...
+  return $ do -- снова ныряем в монаду Dynamic
+    grammsDyn <- grammsDynDyn
+    grams <- sequence grammsDyn
+    return $ sum grams
 						</code></pre>
 
-						<iframe style="width: 1500px; height: 600px;" src="http://localhost:8081/step05.html"></iframe>
+						<pre><code data-trim data-noescape class="bbcode haskell">
+grammsDynDyn :: Dynamic [Dynamic Gramms]
+grammsDyn :: [Dynamic Gramms]
+sequence :: [Dynamic Gramms] -> Dynamic [Gramms]
+						</code></pre>
+
+					</section>
+					<section data-transition="none">
+						<h3>Monad</h3>
+						<object class="bigimg" type="image/svg+xml" data="img/frp_12.svg"></object>
 					</section>
 				</section>
-				<section>
-					<p>Выводы</p>
+
+				<section data-transition="none">
+					<h3>Что хотел сказать автор</h3>
 					<ul>
-						<li>Реактивный frontend на Haskell</li>
-						<li>Общий код клиента и сервера</li>
-						<li>Статические гарантии</li>
+						<li>Можно готовить frontend на Haskell</li>
+						<li>Плюшки от расшаренной кодобазы</li>
+						<li>Мощный язык с статическими гарантиями</li>
+						<li>Минимум boilerplate</li>
 					</ul>
 				</section>
-				<section>
+				<section data-transition="none">
 					<ul>
 						<li><a href="https://github.com/NCrashed/bread-units">https://github.com/NCrashed/bread-units</a></li>
 					</ul>

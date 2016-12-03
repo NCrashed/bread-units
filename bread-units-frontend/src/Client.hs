@@ -25,7 +25,7 @@ productCarbs' = client serverAPI (Proxy :: Proxy m) (pure (BasePath "/"))
 -- | Widget that queries product carbohydrates as soon as the widget is constructed
 productCarbs :: MonadWidget t m => ProductName -> m (Dynamic t CarbPart)
 productCarbs name = do
-  e <- getPostBuild
+  e <- delay (realToFrac (0.1 :: Double)) =<< getPostBuild
   respE <- productCarbs' (pure (Right name)) e
   widgetHold (return ()) $ ffor respE $ \case
     ResponseSuccess _ _ -> return ()

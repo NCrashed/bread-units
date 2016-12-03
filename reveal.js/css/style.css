@@ -1,8 +1,11 @@
 .center-wrap { text-align: center; }
 .center { display: inline-block; }
-.bcode { font-size: 46px !important; }
+.bcode { font-size: 46px !important; line-height: 50px !important;}
+.bbcode { font-size: 56px !important; line-height: 55px !important;}
 .hljs { min-height: 50px; vertical-align: middle;}
 // .hljs span { line-height: 50px; }
 .plot { width: 1920px; height: 800px;  }
-.bigimg { width: 1500px; }
+.bigimg { width: 1800px; }
 .headmargin { margin-bottom: 500px !important; }
+.slides img{border:0 !important; box-shadow: 0 0 0px rgba(0, 0, 0, 0.15) !important;}
+.bigtext { font-size: 100px !important; }

@@ -13,7 +13,8 @@ label {
 
 input {
   font-size: 60px !important;
-  margin-top: 10px;
+  margin-left: 20px;
+  margin-top: 14px;
   min-height: 55px;
 }
 
@@ -23,4 +24,8 @@ input {
 
 .name-input {
   margin-bottom: 10px !important;
+}
+
+.leftpad {
+  margin-left: 30px;
 }
