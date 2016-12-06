@@ -13,5 +13,5 @@
 ## Known problems
 
 * You need `cabal-install-1.24` in your path, not `1.25`.
-* You need `npm` installed in your OS (needed for ghcjs).
+* You need `npm` and `node.js` installed in your OS (needed for ghcjs).
 * You need `libtinfo` library with `devel` version installed in your OS.
