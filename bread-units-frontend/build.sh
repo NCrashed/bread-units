@@ -1,7 +1,3 @@
-# Replace current folder in stack.yaml
-cp stack.yaml.tmpl stack.yaml
-sed -i 's?CURRENT_FOLDER?'`pwd`'?' stack.yaml
-
 stack setup
 stack install "$@"
 

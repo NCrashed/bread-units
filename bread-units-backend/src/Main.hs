@@ -9,7 +9,7 @@ import Network.Wai
 import Network.Wai.Handler.Warp
 import Servant.API
 import Servant.Server
-import Servant.Utils.StaticFiles                  (serveDirectory)
+import Servant.Utils.StaticFiles                  (serveDirectoryFileServer)
 
 -- | Implement endpoint that returns percent of carbohydrates in food
 getCarbohydrates :: Text -> Handler Double
@@ -38,7 +38,7 @@ fullAPI :: Proxy FullAPI
 fullAPI = Proxy
 
 server :: Application
-server = serve fullAPI (getCarbohydrates :<|> serveDirectory "./static")
+server = serve fullAPI (getCarbohydrates :<|> serveDirectoryFileServer "./static")
 
 main :: IO ()
 main = run 8081 server
