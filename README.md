@@ -1,5 +1,11 @@
 # bread-units
 
+This is simple example of reactive frontend in Haskell using [reflex-dom](https://github.com/reflex-frp/reflex-platform#tutorial).
+The web application helps to calculate amount of sugar in a lunch in bread units (quantity of a product containing 12 grams of net carbs) and
+demonstrates basic usage of reflex-dom components and design choices.
+
+The project is entangled with slides (see reveal.js folder) and [talk](https://www.youtube.com/watch?v=x8-keXC4H88) (Russian language, sorry) given on FPConf 2016 Moscow.
+
 ## Compilation
 
 1. Clone the repo with `--recusive` or run `git submodule update --init --recusive`
