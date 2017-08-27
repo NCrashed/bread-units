@@ -3,7 +3,7 @@
 ## Compilation
 
 1. Clone the repo with `--recusive` or run `git submodule update --init --recusive`
-1. Install nix package manager (the simplest way is `curl https://nixos.org/nix/install | sh`)
+1. Install [nix](https://nixos.org/nix/) package manager (the simplest way is `curl https://nixos.org/nix/install | sh`)
 1. Build frontend: `cd bread-units-frontend && ./build.sh`
 1. Build backend: `nix-build release.nix`
 1. Run server with: `nix-shell`
