@@ -72,7 +72,7 @@ intInput label initVal = el "fieldset" $ do
 enterInput :: MonadWidget t m => m (Event t Text)
 enterInput = elClass "div" "name-input" $ do
   ti <- textInput def
-  let enterE = textInputGetEnter ti
+  let enterE = keypress Enter ti
   return $ tagPromptlyDyn (ti ^. textInput_value) enterE
 
 -- | Helper wrapper around 'listWithKey'
